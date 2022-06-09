@@ -53,7 +53,7 @@ async def gateway(request, ws):
         if data["type"] == "identify":
             token = token_table.search(user.token == data["token"])
             if len(token) == 0:
-                await ws.send(dumper("identify", success=False}))
+                await ws.send(dumper("identify", success=False))
                 await ws.close()
             else:
                 await ws.send(dumper("identify"))
