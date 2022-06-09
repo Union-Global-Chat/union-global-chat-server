@@ -27,12 +27,12 @@ requests.get("https://ugc.renorari.net/api/v1/channels", headers={
 ### JavaScript
 
 ```javascript
-const axios = require("axios");
 const token = "";
 
-axios.get("https://ugc.renorari.net/api/v1/channels", {
-    headers: {
-        Authorization: `Bearer ${token}`
+fetch("https://ugc.renorari.net/api/v1/channels", {
+    "method": "GET",
+    "headers": {
+        "Authorization": `Bearer ${token}`
     }
 });
 ```
