@@ -1,6 +1,7 @@
 from functools import wraps
 from tinydb import TinyDB, Query
 from sanic import response
+import asyncio
 
 db = TinyDB('db.json')
 table = db.table("token")
@@ -26,4 +27,22 @@ def authorized():
     return decorator
 
 def loop(seconds: int):
-    pass
+    def deco(coro):
+         return Task(coro, seconds)
+    return deco
+
+class Task:
+    def __init__(self, coro, seconds):
+        self.callback = coro
+        self.wait = seconds
+        
+    def __call__(self, *args, **kwargs):
+        return self.callback
+    
+    def start(self, *args, **kwargs):
+        asyncio.create_task(self.do(*args, **kwargs))
+        
+    async def do(self, *args, **kwargs):
+        while True:
+            await self.callback(*args, **kwargs)
+            await asyncio.sleep(self.wait)
