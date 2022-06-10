@@ -80,10 +80,11 @@ async def send(request, userid):
             "data": data
         }
     }
-    try:
-        await asyncio.gather(*[ws.send(dumper(**payload)) for ws in wss])
-    except Exception:
-        pass
+    for ws in wss:
+        try:
+            await ws.send(dumper(**payload))
+        except Exception:
+            wss.remove(ws)
     data["from_bot"] = userid
     content_table.insert(data)
     return json(message="送信できました")
@@ -120,10 +121,11 @@ async def delete_content(request, userid, message_id):
                 "messageid": message_id
             }
         }
-        try:
-            await asyncio.gather(*[ws.send(dumper(**payload)) for ws in wss])
-        except Exception:
-            pass
+        for ws in wss:
+            try:
+                await ws.send(dumper(**payload))
+            except Exception:
+                wss.remove(ws)
         content_table.remove(content.message.id == message_id)
         return json()
 
