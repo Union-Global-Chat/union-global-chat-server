@@ -58,7 +58,7 @@ async def gateway(request, ws):
     while True:
         data = loads(zlib.decompress(await ws.recv()))
         if data["type"] == "identify":
-            token = token_table.search(user.token == data["token"])
+            token = token_table.search(user.token == data["data"]["token"])
             if len(token) == 0:
                 await ws.send(dumper("identify", success=False))
                 await ws.close()
