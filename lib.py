@@ -24,3 +24,6 @@ def authorized():
                 return await f(request, s[0]["user"], *args, **kwargs)
         return decorated_function
     return decorator
+
+def loop(seconds: int):
+    pass
