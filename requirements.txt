@@ -1,3 +1,4 @@
 sanic
 tinydb
 orjson
+sanic-ext
