@@ -12,7 +12,7 @@ def json(data: dict=None, *, message: str=None,
     success = True
     if status != 200:
         success = False
-    return response.json({"success": success, "status": status, "message": message, "data": data})
+    return response.json({"success": success, "status": status, "message": message, "data": data}, status=status)
 
 def authorized():
     def decorator(f):
