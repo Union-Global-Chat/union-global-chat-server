@@ -8,6 +8,7 @@ import zlib
 
 
 bp = Blueprint("version_1", url_prefix="/api/v1")
+app = None
 
 db = TinyDB('db.json')
 token_table = db.table("token")
@@ -80,12 +81,12 @@ async def send(request, userid):
         pass
     data["from_bot"] = userid
     content_table.insert(data)
-    return response.json(message="送信できました")
+    return json(message="送信できました")
                     
 @bp.get("/channels")
 @authorized()
 async def contents(request, userid):
-    return response.json(content_table.all())
+    return json(content_table.all())
 
 @bp.get("/channels/<message_id>")
 @authorized()
@@ -102,7 +103,7 @@ async def getUser(self, userid, message_id):
 async def delete_content(request, userid, message_id):
     data = content_table.search(content.message.id == message_id)
     if len(data) == 0:
-        return response.json(status=404, message="そのメッセージは見つかりません")
+        return json(status=404, message="そのメッセージは見つかりません")
     else:
         check = content_table.search(content.from_bot == userid)
         if len(check) == 0:
