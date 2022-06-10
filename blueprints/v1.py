@@ -1,5 +1,6 @@
 from sanic import Blueprint
 from lib import authorized, json
+import lib
 from tinydb import TinyDB, Query
 from orjson import dumps, loads
 from time import time
@@ -41,6 +42,10 @@ class HeartBeat:
                 wss.remove(self.ws)
                 break
             await asyncio.sleep(10)
+            
+@lib.loop(10)
+async def status_check():
+    status_table.insert({"time": int(time()), "count": len(wss)})
 
 @bp.websocket("/gateway")
 async def gateway(request, ws):
@@ -120,4 +125,8 @@ async def delete_content(request, userid, message_id):
         except Exception:
             pass
         content_table.remove(content.message.id == message_id)
-        return json() 
+        return json()
+
+@bp.get("/status")
+async def status(request):
+    return json(status_table.all())
