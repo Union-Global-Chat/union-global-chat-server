@@ -47,6 +47,7 @@ class HeartBeat:
 async def status_check():
     status_table.insert({"time": int(time()), "count": len(wss)})
 
+
 @bp.websocket("/gateway")
 async def gateway(request, ws):
     """
