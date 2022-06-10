@@ -17,3 +17,5 @@
 [ゲートウェイ](gateway)
 
 [channels](channels)
+
+[status api](status)
