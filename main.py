@@ -5,6 +5,7 @@ import os
 
 
 app = Sanic("ugc-server")
+app.config.CORS_ORIGINS = "*"
 
 
 for name in os.listdir("blueprints"):
