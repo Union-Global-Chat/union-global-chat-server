@@ -18,11 +18,12 @@ status_table = db.table("status")
 user = Query()
 content = Query()
 
-def dumper(type: str, data: dict=None, *, success: bool=True):
+def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None):
     payload = {
         "type": type,
         "data": data,
-        "success": success
+        "success": success,
+        "message": message
     }
     return zlib.compress(dumps(payload))
 wss = []
@@ -61,8 +62,7 @@ async def gateway(request, ws):
         if data["type"] == "identify":
             token = token_table.search(user.token == data["data"]["token"])
             if len(token) == 0:
-                await ws.send(dumper("identify", success=False))
-                await ws.close()
+                await ws.close(message=dumper("identify", success=False, code=4001, message="invaild token"))
             else:
                 await ws.send(dumper("identify"))
                 wss.append(ws)
@@ -73,7 +73,7 @@ async def gateway(request, ws):
 async def send(request, userid):
     data = request.json
     if "discord.gg" in data["message"]["content"]:
-        return json(message="招待リンクを検知しました", status=400)
+        return json(message="Detect invite link", status=400)
     payload = {
         "type": "message",
         "data": {
