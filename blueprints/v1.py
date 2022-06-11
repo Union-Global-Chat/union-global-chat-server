@@ -73,7 +73,7 @@ async def gateway(request, ws):
 async def send(request, userid):
     data = request.json
     if "discord.gg" in data["message"]["content"]:
-        return json(message="招待リンクを検知しました", status=500)
+        return json(message="招待リンクを検知しました", status=400)
     payload = {
         "type": "message",
         "data": {
