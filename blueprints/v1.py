@@ -68,7 +68,7 @@ async def gateway(request, ws):
                 wss.append(ws)
                 app.loop.create_task(HeartBeat(ws).sending_heartbeat())
 
-@bp.post("/channels")
+@bp.post("/messages")
 @authorized()
 async def send(request, userid):
     data = request.json
@@ -90,12 +90,12 @@ async def send(request, userid):
     content_table.insert(data)
     return json(message="送信できました")
                     
-@bp.get("/channels")
+@bp.get("/messages")
 @authorized()
 async def contents(request, userid):
     return json(content_table.all())
 
-@bp.get("/channels/<message_id>")
+@bp.get("/messages/<message_id>")
 @authorized()
 async def getUser(self, userid, message_id):
     query = Query()
@@ -105,7 +105,7 @@ async def getUser(self, userid, message_id):
     else:
         return json(data[0])
 
-@bp.delete("/channels/<message_id>")
+@bp.delete("/messages/<message_id>")
 @authorized()
 async def delete_content(request, userid, message_id):
     data = content_table.search(content.message.id == message_id)
