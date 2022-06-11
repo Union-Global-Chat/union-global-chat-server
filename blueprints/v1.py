@@ -77,7 +77,7 @@ async def send(request, userid):
     payload = {
         "type": "message",
         "data": {
-            "from": userid,
+            "source": userid,
             "data": data
         }
     }
@@ -118,7 +118,7 @@ async def delete_content(request, userid, message_id):
         payload = {
             "type": "delete",
             "data": {
-                "from": userid,
+                "source": userid,
                 "messageid": message_id
             }
         }
