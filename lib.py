@@ -9,10 +9,10 @@ user = Query()
 
 def json(data: dict=None, *, message: str=None,
          status: int=200, **kwargs):
-    payload = {"success": success, "status": status, "message": message, "data": data}
     success = True
     if status != 200:
         success = False
+    payload = {"success": success, "status": status, "message": message, "data": data}
     if status == 400:
         payload["code"] = kwargs.pop("code")
     return response.json(payload, status=status)
