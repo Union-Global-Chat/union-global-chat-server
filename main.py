@@ -1,12 +1,13 @@
 from sanic import Sanic, response
 from importlib import import_module
+from cors import CorsExtend
 from data import config
 import subprocess
 import os
 
 
 app = Sanic("ugc-server")
-app.config.CORS_ORIGINS = "*"
+CorsExtend(app)
 
 
 for name in os.listdir("blueprints"):
