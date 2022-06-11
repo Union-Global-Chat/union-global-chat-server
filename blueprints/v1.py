@@ -73,7 +73,7 @@ async def gateway(request, ws):
 async def send(request, userid):
     data = request.json
     if "discord.gg" in data["message"]["content"]:
-        return json(message="Detect invite link", status=400)
+        return json(message="Invite link detected", status=400, code="ngword_detect")
     payload = {
         "type": "message",
         "data": {
