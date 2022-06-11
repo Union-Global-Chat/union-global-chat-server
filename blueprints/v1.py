@@ -75,7 +75,7 @@ async def send(request, userid):
     if "discord.gg" in data["message"]["content"]:
         return json(message="招待リンクを検知しました", status=500)
     payload = {
-        "type": "send",
+        "type": "message",
         "data": {
             "from": userid,
             "data": data
