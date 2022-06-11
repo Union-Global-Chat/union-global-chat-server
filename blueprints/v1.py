@@ -86,7 +86,7 @@ async def send(request, userid):
             await ws.send(dumper(**payload))
         except Exception:
             wss.remove(ws)
-    data["from_bot"] = userid
+    data["source"] = userid
     content_table.insert(data)
     return json(message="送信できました")
                     
