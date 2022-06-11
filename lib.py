@@ -8,11 +8,14 @@ table = db.table("token")
 user = Query()
 
 def json(data: dict=None, *, message: str=None,
-         status: int=200):
+         status: int=200, **kwargs):
+    payload = {"success": success, "status": status, "message": message, "data": data}
     success = True
     if status != 200:
         success = False
-    return response.json({"success": success, "status": status, "message": message, "data": data}, status=status)
+    if status == 400:
+        payload["code"] = kwargs.pop("code")
+    return response.json(payload, status=status)
 
 def authorized():
     def decorator(f):
