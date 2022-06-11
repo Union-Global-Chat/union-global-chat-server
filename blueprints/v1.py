@@ -110,11 +110,11 @@ async def getUser(self, userid, message_id):
 async def delete_content(request, userid, message_id):
     data = content_table.search(content.message.id == message_id)
     if len(data) == 0:
-        return json(status=404, message="そのメッセージは見つかりません")
+        return json(status=404, message="I can't found that message.")
     else:
         check = content_table.search(content.from_bot == userid)
         if len(check) == 0:
-            return json(status=401, message="別のbotから送信されていますので、削除できません。")
+            return json(status=403, message="Sended by another bot, so you can't delete message.")
         payload = {
             "type": "delete",
             "data": {
