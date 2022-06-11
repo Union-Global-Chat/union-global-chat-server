@@ -72,7 +72,11 @@ async def gateway(request, ws):
 @authorized()
 async def send(request, userid):
     data = request.json
-    if "discord.gg" in data["message"]["content"]:
+    if ("discord.gg" in data["message"]["content"] or
+        "discord.com/invite" in data["message"]["content"]
+        "canary.discord.com/invite" in data["message"]["content"]
+        "discordapp.com/invite" in data["message"]["content"]
+        "ptbd.discord.com/invite" in data["message"]["content"]):
         return json(message="Invite link detected", status=400, code="ngword_detect")
     payload = {
         "type": "message",
