@@ -16,6 +16,12 @@ for name in os.listdir("blueprints"):
         app.blueprint(lib.bp)
         lib.app = app
         
+        
+@app.get("/")
+async def main(request):
+    return response.redirect("https://ugc-webpage.vercel.app/")
+
+        
 @app.post("/git")
 async def git(request):
     print("updating...")
