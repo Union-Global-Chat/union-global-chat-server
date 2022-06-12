@@ -2,7 +2,7 @@ from sanic import Sanic, response
 from importlib import import_module
 from cors import CorsExtend
 from data import config
-import subprocess
+from asyncio.subprocess import create_subprocess_shell
 import os
 
 
@@ -29,7 +29,8 @@ async def main(request):
 @app.post("/git")
 async def git(request):
     print("updating...")
-    subprocess.run(["git", "pull", "origin", "main"])
+    proc = await create_subprocess_shell("".join(i for i in ["git", "pull", "origin", "main"]))
+    await proc.wait()
     print("Git pulled")
     app.stop()
     return response.json({"hello", "world"})
