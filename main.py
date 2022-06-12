@@ -32,6 +32,12 @@ async def main(request):
     print("redirecting...")
     return response.redirect("https://ugc-webpage.vercel.app/")
 
+
+@app.get("/status")
+async def main(request):
+    print("redirecting...")
+    return response.redirect("https://ugc-webpage.vercel.app/status")
+
         
 @app.post("/git")
 async def git(request):
