@@ -6,6 +6,7 @@ from orjson import dumps, loads
 from time import time
 import asyncio
 import zlib
+import re
 
 
 bp = Blueprint("version_1", url_prefix="/api/v1")
@@ -17,6 +18,7 @@ content_table = db.table("content")
 status_table = db.table("status")
 user = Query()
 content = Query()
+invite_detector = re.compile("(http(s)?://)?((canary|ptb).)?discord(.gg|.com)/[0-9]")
 
 def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None):
     payload = {
@@ -72,11 +74,7 @@ async def gateway(request, ws):
 @authorized()
 async def send(request, userid):
     data = request.json
-    if ("discord.gg" in data["message"]["content"] or
-        "discord.com/invite" in data["message"]["content"] or
-        "canary.discord.com/invite" in data["message"]["content"] or
-        "discordapp.com/invite" in data["message"]["content"] or
-        "ptbd.discord.com/invite" in data["message"]["content"]):
+    if invite_detector.match(data["message"]["content"]) is not None:
         return json(message="Invite link detected", status=400, code="ngword_detect")
     payload = {
         "type": "message",
