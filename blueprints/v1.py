@@ -100,7 +100,7 @@ async def send(request, userid):
             wss.remove(ws)
     data["source"] = userid
     content_table.insert(data)
-    return json(message="送信できました")
+    return json(message="send message")
                     
 @bp.get("/messages")
 @authorized()
