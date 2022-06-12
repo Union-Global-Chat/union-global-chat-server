@@ -25,7 +25,7 @@ for name in os.listdir("blueprints"):
 @app.before_server_start
 async def before(app, loop):
     async with AsyncClient() as client:
-        await client.post(config["webhook"], json={"content": "Server is running."})
+        await client.post(config["webhook"], json={"content": "Server is started."})
         
         
 @app.get("/")
