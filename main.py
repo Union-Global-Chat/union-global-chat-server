@@ -19,6 +19,7 @@ for name in os.listdir("blueprints"):
         
 @app.get("/")
 async def main(request):
+    print("redirecting...")
     return response.redirect("https://ugc-webpage.vercel.app/")
 
         
