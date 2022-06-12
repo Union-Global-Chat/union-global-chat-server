@@ -32,6 +32,7 @@ async def git(request):
     proc = await create_subprocess_shell("".join(i for i in ["git", "pull", "origin", "main"]))
     await proc.wait()
     print("Git pulled")
+    print("Now rebooting...")
     app.stop()
     return response.json({"hello": "world"})
 
