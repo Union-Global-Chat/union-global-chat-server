@@ -1,5 +1,6 @@
 from sanic import Blueprint
 from lib import authorized, json
+from aiofiles import open as aioopen
 import lib
 from tinydb import TinyDB, Query
 from orjson import dumps, loads
@@ -12,13 +13,17 @@ import re
 bp = Blueprint("version_1", url_prefix="/api/v1")
 app = None
 
+
 db = TinyDB('db.json')
 token_table = db.table("token")
 content_table = db.table("content")
 status_table = db.table("status")
 user = Query()
 content = Query()
+
+
 invite_detector = re.compile("(http(s)?://)?((canary|ptb).)?discord(.gg|.com)/[0-9]")
+
 
 def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None):
     payload = {
@@ -75,6 +80,10 @@ async def gateway(request, ws):
 @authorized()
 async def send(request, userid):
     data = request.json
+    async with aioopen("bans.txt", "r") as f:
+        users = await f.readlines()
+    if data["author"]["id"] in users:
+        return json(message="That user are baned", status=400, code="ban_user")
     if invite_detector.match(data["message"]["content"]) is not None:
         return json(message="Invite link detected", status=400, code="ngword_detect")
     payload = {
