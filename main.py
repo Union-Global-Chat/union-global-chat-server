@@ -28,7 +28,7 @@ async def main(request):
         
 @app.post("/git")
 async def git(request):
-    print("updating...")
+    print("\n".join(i["message"] for i in request.json["commits"])
     proc = await create_subprocess_shell("".join(i for i in ["git", "pull", "origin", "main"]))
     await proc.wait()
     print("Git pulled")
