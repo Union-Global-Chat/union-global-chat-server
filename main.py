@@ -30,14 +30,17 @@ async def before(app, loop):
         
 @app.get("/")
 async def main(request):
-    print("redirecting...")
     return response.redirect("https://ugc-webpage.vercel.app/")
 
 
 @app.get("/status")
-async def main(request):
-    print("redirecting...")
+async def status(request):
     return response.redirect("https://ugc-webpage.vercel.app/status")
+
+
+@app.get("/support")
+async def support(request):
+    return response.redirect("https://ugc-webpage.vercel.app/support")
 
         
 @app.post("/git")
