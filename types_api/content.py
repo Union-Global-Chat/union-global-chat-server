@@ -26,8 +26,14 @@ class Guild(TypedDict):
     name: str
     id: str
     iconURL: str
-
-
+        
+        
+class MessageReference(TypedDict):
+    channel_id: Optional[str]
+    guild_id: Optional[str]
+    message_id: Optional[str]
+        
+        
 class Message(TypedDict):
     content: str
     id: str
@@ -35,12 +41,6 @@ class Message(TypedDict):
     reference: MessageReference
     attachments: List[Attachment]
     embeds: list
-        
-        
-class MessageReference(TypedDict):
-    channel_id: Optional[str]
-    guild_id: Optional[str]
-    message_id: Optional[str]
 
 
 class Content(TypedDict):
