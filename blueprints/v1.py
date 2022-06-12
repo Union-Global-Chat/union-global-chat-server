@@ -28,6 +28,7 @@ def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None)
         "message": message
     }
     return zlib.compress(dumps(payload))
+
 wss = []
 
 class HeartBeat:
