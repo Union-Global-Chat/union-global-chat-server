@@ -7,6 +7,7 @@ import os
 
 
 app = Sanic("ugc-server")
+print("Setuping cors")
 CorsExtend(app)
 
 
