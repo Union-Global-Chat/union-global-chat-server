@@ -27,6 +27,7 @@ async def main(request):
 async def git(request):
     print("updating...")
     subprocess.run(["git", "pull", "origin", "main"])
+    print("Git pulled")
     app.stop()
     return response.json({"hello", "world"})
 
