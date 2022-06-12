@@ -33,7 +33,7 @@ async def git(request):
     await proc.wait()
     print("Git pulled")
     app.stop()
-    return response.json({"hello", "world"})
+    return response.json({"hello": "world"})
 
 
 app.run(**config)
