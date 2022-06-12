@@ -2,6 +2,7 @@ from sanic import Sanic, response
 from importlib import import_module
 from cors import CorsExtend
 from data import config
+from httpx import AsyncClient
 from asyncio.subprocess import create_subprocess_shell
 import os
 
@@ -18,6 +19,12 @@ for name in os.listdir("blueprints"):
         app.blueprint(lib.bp)
         lib.app = app
         print("Loaded: {}".format(name))
+        
+        
+@app.before_server_start
+async def before(app, loop):
+    async with AsyncClient() as client:
+        await client.post(config["webhook"], json={"content": "Server is running."})
         
         
 @app.get("/")
