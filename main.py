@@ -19,7 +19,7 @@ for name in os.listdir("blueprints"):
 @app.post("/git")
 async def git(request):
     print("updating...")
-    subprocess.Popen(["git", "pull", "origin", "main"])
+    subprocess.run(["git", "pull", "origin", "main"])
     app.stop()
     return response.json({"hello", "world"})
 
