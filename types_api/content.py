@@ -32,9 +32,15 @@ class Message(TypedDict):
     content: str
     id: str
     cleanContent: str
-    reference: Optional[str]
+    reference: MessageReference
     attachments: List[Attachment]
     embeds: list
+        
+        
+class MessageReference(TypedDict):
+    channel_id: Optional[str]
+    guild_id: Optional[str]
+    message_id: Optional[str]
 
 
 class Content(TypedDict):
