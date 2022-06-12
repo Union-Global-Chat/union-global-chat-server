@@ -44,4 +44,4 @@ async def git(request):
     return response.json({"hello": "world"})
 
 
-app.run(**config)
+app.run(**config["sanic"])
