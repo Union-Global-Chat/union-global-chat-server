@@ -1,3 +1,4 @@
+print("Now running")
 from sanic import Sanic, response
 from importlib import import_module
 from cors import CorsExtend
