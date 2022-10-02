@@ -1,0 +1,11 @@
+webhook = ""
+
+[sanic]
+host = "0.0.0.0"
+port = 8080
+
+[mysql]
+host = ""
+port = 3306
+user = ""
+password = ""
