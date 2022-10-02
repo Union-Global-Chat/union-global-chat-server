@@ -2,3 +2,4 @@ sanic
 tinydb
 orjson
 sanic-ext
+pytoml
