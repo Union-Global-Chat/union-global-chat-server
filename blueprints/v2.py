@@ -75,6 +75,7 @@ async def gateway(request, ws):
                 await ws.close(message=dumper("identify", success=False, code=4001, message="invaild token"))
             else:
                 await ws.send(dumper("identify"))
+                manager.connect(ws)
                 app.loop.create_task(HeartBeat(ws).sending_heartbeat())
 
 @bp.post("/messages")
