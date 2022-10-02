@@ -2,7 +2,8 @@ print("Now running")
 from sanic import Sanic, response
 from importlib import import_module
 from cors import CorsExtend
-from data import config
+from data import CONFIG
+from aiomysql import create_pool
 from httpx import AsyncClient
 from asyncio.subprocess import create_subprocess_shell
 import os
@@ -24,8 +25,9 @@ for name in os.listdir("blueprints"):
         
 @app.before_server_start
 async def before(app, loop):
+    app.pool = await create_pool(**CONFIG["mysql"])
     async with AsyncClient() as client:
-        await client.post(config["webhook"], json={"content": "Server is started."})
+        await client.post(CONFIG["webhook"], json={"content": "Server is started."})
         
         
 @app.get("/")
@@ -54,4 +56,4 @@ async def git(request):
     return response.json({"hello": "world"})
 
 
-app.run(**config["sanic"])
+app.run(**CONFIG["sanic"])
