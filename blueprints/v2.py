@@ -8,9 +8,11 @@ from time import time
 import asyncio
 import zlib
 import re
+from utils.wsmanager import WsManager
 
 
-bp = Blueprint("version_1", url_prefix="/api/v1")
+bp = Blueprint("version_1", url_prefix="/api/v2")
+manager = WsManager()
 app = None
 
 
@@ -73,7 +75,6 @@ async def gateway(request, ws):
                 await ws.close(message=dumper("identify", success=False, code=4001, message="invaild token"))
             else:
                 await ws.send(dumper("identify"))
-                wss.append(ws)
                 app.loop.create_task(HeartBeat(ws).sending_heartbeat())
 
 @bp.post("/messages")
@@ -93,11 +94,7 @@ async def send(request, userid):
             "data": data
         }
     }
-    for ws in wss:
-        try:
-            await ws.send(dumper(**payload))
-        except Exception:
-            wss.remove(ws)
+    await manager.broadcast(dumper(**payload))
     data["source"] = userid
     content_table.insert(data)
     return json(message="send message")
@@ -134,11 +131,7 @@ async def delete_content(request, userid, message_id):
                 "messageid": message_id
             }
         }
-        for ws in wss:
-            try:
-                await ws.send(dumper(**payload))
-            except Exception:
-                wss.remove(ws)
+        await manager.broadcast(dumper(**payload))
         content_table.remove(content.message.id == message_id)
         return json()
 
