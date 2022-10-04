@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 db.json
-config.json
+config.toml
 
 # Renorari Server
 start.sh
