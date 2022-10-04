@@ -1,4 +1,4 @@
-from toml import load
+from pytoml import load
 
 from typing import TypedDict
 
