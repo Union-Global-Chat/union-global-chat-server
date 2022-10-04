@@ -1,10 +1,10 @@
-from sanic import WebSocket
+from sanic import Websocket
 
 import asyncio
 
 
 class HeartBeat:
-    def __init__(self, ws):
+    def __init__(self, ws: Websocket):
         self.ws = ws
         self.open: bool = True
 
