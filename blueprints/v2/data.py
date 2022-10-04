@@ -16,6 +16,12 @@ class DataManager(DatabaseManager):
                 Guild JSON,
                 Message JSON
             );""")
+        await cursor.execute("""
+            CREATE TABLE IF NOT EXISTS Token(
+                BotId BIGINT,
+                Token TEXT
+            );
+        """)
 
     async def create_message(self, cursor, source, channel, author, guild, message):
         await cursor.execute(
@@ -29,3 +35,9 @@ class DataManager(DatabaseManager):
             (message_id,)
         )
         return await cursor.fetchone()
+    
+    async def create_token(self, bot_id: int, token: str):
+        await cursor.execute(
+            "INSERT INTO Token VALUES (%s, %s);",
+            (bot_id, token)
+        )
