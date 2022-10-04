@@ -9,6 +9,7 @@ import asyncio
 import zlib
 import re
 from utils.wsmanager import WsManager
+from .utils import HeartBeat
 
 
 bp = Blueprint("version_1", url_prefix="/api/v2")
@@ -35,8 +36,6 @@ def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None)
         "message": message
     }
     return zlib.compress(dumps(payload))
-
-wss = []
             
 @lib.loop(10)
 async def status_check():
