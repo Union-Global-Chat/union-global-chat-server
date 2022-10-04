@@ -10,7 +10,6 @@ class DatabaseManager:
     def __init_subclass__(cls):
         for name, func in getmembers(cls, isfunction):
             if not name.startswith("_") and iscoroutinefunction(func):
-                print(name)
                 @wraps(func)
                 async def new(self, *args, **kwargs):
                     if "cursor" in kwargs:
