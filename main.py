@@ -31,7 +31,7 @@ async def before(app, loop):
 
 @app.before_server_stop
 async def stop_set(app, _):
-    await app.ctx.pool.close()
+    app.ctx.pool.close()
         
 @app.get("/")
 async def main(request):
