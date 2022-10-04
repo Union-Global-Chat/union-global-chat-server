@@ -25,7 +25,7 @@ for name in os.listdir("blueprints"):
         
 @app.before_server_start
 async def before(app, loop):
-    app.pool = await create_pool(**CONFIG["mysql"])
+    app.ctx.pool = await create_pool(**CONFIG["mysql"])
     async with AsyncClient() as client:
         await client.post(CONFIG["webhook"], json={"content": "Server is started."})
         
