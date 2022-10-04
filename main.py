@@ -28,7 +28,10 @@ async def before(app, loop):
     app.ctx.pool = await create_pool(**CONFIG["mysql"])
     async with AsyncClient() as client:
         await client.post(CONFIG["webhook"], json={"content": "Server is started."})
-        
+
+@app.before_server_stop
+async def stop_set(app, _):
+    await app.ctx.pool.close()
         
 @app.get("/")
 async def main(request):
