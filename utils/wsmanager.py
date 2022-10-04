@@ -7,10 +7,10 @@ class WsManager:
     def __init__(self):
         self.protocols: List[Websocket] = []
 
-    def connect(self, ws: WebSocket) -> None:
+    def connect(self, ws: Websocket) -> None:
         self.protocols.append(ws)
 
-    async def close(self, ws: WebSocket) -> None:
+    async def close(self, ws: Websocket) -> None:
         await ws.close()
         self.protocols.remove(ws)
 
