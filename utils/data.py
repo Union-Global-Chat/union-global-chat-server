@@ -13,8 +13,8 @@ class DatabaseManager:
                 @wraps(func)
                 async def new(self, *args, **kwargs):
                     if "cursor" in kwargs:
-                        return await func(cur, *args, **kwargs)
+                        return await func(self, *args, **kwargs)
                     async with self.pool.acquire() as conn:
                         async with conn.cursor() as cur:
-                            return await func(cur, *args, **kwargs)
+                            return await func(self, cur, *args, **kwargs)
                 setattr(cls, name, new)
