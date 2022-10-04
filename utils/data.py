@@ -10,9 +10,10 @@ class DatabaseManager:
     def __init_subclass__(cls):
         for name, func in getmembers(cls, isfunction):
             if not name.startswith("_") and iscoroutinefunction(func):
+                print(func)
+                print(name)
                 @wraps(func)
                 async def new(self, *args, **kwargs):
-                    print(func)
                     if "cursor" in kwargs:
                         return await func(self, *args, **kwargs)
                     async with self.pool.acquire() as conn:
