@@ -1,7 +1,7 @@
 print("Now running")
 from sanic import Sanic, response
 from importlib import import_module
-from cors import CorsExtend
+from utils import CorsExtend
 from data import CONFIG
 from aiomysql import create_pool
 from httpx import AsyncClient
