@@ -40,9 +40,6 @@ def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None)
     }
     return zlib.compress(dumps(payload))
             
-@lib.loop(10)
-async def status_check():
-    status_table.insert({"time": int(time()), "count": len(wss)})
 
 @bp.after_server_start
 async def setup(app, _):
@@ -69,6 +66,7 @@ async def gateway(request, ws):
                 manager.connect(ws)
                 app.loop.create_task(HeartBeat(ws).start())
 
+
 @bp.post("/messages")
 @authorized()
 async def send(request, userid):
@@ -90,16 +88,17 @@ async def send(request, userid):
     data["source"] = userid
     await data.create_message(**data)
     return json(message="send message")
-                    
+
+
 @bp.get("/messages")
 @authorized()
 async def contents(request, userid):
     return json(content_table.all())
 
+
 @bp.get("/messages/<message_id>")
 @authorized()
 async def getUser(self, userid, message_id):
-    query = Query()
     result = await data.search_message(message_id)
     if result is None:
         return json(message="I can't found that message.", status=404)
@@ -112,6 +111,7 @@ async def getUser(self, userid, message_id):
             "guild": guild,
             "message": message
         })
+
 
 @bp.delete("/messages/<message_id>")
 @authorized()
@@ -133,7 +133,3 @@ async def delete_content(request, userid, message_id):
         await manager.broadcast(dumper(**payload))
         content_table.remove(content.message.id == message_id)
         return json()
-
-@bp.get("/status")
-async def status(request):
-    return json(status_table.all())
