@@ -98,11 +98,18 @@ async def contents(request, userid):
 @authorized()
 async def getUser(self, userid, message_id):
     query = Query()
-    data = content_table.search(query.message.id == message_id)
-    if len(data) == 0:
+    result = await data.search_message(message_id)
+    if result is None:
         return json(message="I can't found that message.", status=404)
     else:
-        return json(data[0])
+        source, channel, author, guild, message = result
+        return json({
+            "source": source,
+            "channel": channel,
+            "author": author,
+            "guild": guild,
+            "message": message
+        })
 
 @bp.delete("/messages/<message_id>")
 @authorized()
