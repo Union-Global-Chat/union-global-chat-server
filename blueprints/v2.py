@@ -41,18 +41,21 @@ wss = []
 class HeartBeat:
     def __init__(self, ws):
         self.ws = ws
+        self.open: bool = True
 
     async def send_heartbeat(self):
         await self.ws.send(dumper('heartbeat', {"unix_time": time()}))
 
-    async def sending_heartbeat(self):
-        while True:
+    async def start(self):
+        while self.open:
             try:
-                await self.send_heartbeat()
-            except Exception:
-                wss.remove(self.ws)
-                break
-            await asyncio.sleep(10)
+                payload = loads(zlib.decompress(await asyncio.wait_for(self.ws.recv(), timeout=30)))
+                if payload["type"] == "heartbeat":
+                    await self.send_heartbeat()
+                    await asyncio.sleep(10)
+            except asyncio.TimeoutError:
+                await manager.disconnect(ws)
+                self.open = False
             
 @lib.loop(10)
 async def status_check():
@@ -76,7 +79,7 @@ async def gateway(request, ws):
             else:
                 await ws.send(dumper("identify"))
                 manager.connect(ws)
-                app.loop.create_task(HeartBeat(ws).sending_heartbeat())
+                app.loop.create_task(HeartBeat(ws).start())
 
 @bp.post("/messages")
 @authorized()
