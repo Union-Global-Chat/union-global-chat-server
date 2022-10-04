@@ -10,12 +10,14 @@ class DatabaseManager:
     def __init_subclass__(cls):
         for name, func in getmembers(cls, isfunction):
             if not name.startswith("_") and iscoroutinefunction(func):
-                @wraps(func)
-                async def new(self, *args, **kwargs):
-                    if "cursor" in kwargs:
-                        return await func(self, *args, **kwargs)
-                    async with self.pool.acquire() as conn:
-                        async with conn.cursor() as cur:
-                            return await func(self, cur, *args, **kwargs)
-                setattr(cls, name, new)
-                del func
+                setattr(cls, name, cls.make_new_func(func))
+
+    @staticmethod
+    def make_new_func(func):
+        @wraps(func)
+        async def new_func(self, *args, **kwargs):
+            if "cursor" in kwargs:
+                return await func(self, *args, **kwargs)
+            async with self.pool.acquire() as conn:
+                async with conn.cursor() as cur:
+                    return await func(self, cur, *args, **kwargs)
