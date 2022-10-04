@@ -9,12 +9,13 @@ import asyncio
 import zlib
 import re
 from utils.wsmanager import WsManager
-from .utils import HeartBeat
+from .utils import HeartBeat, DataManager
 
 
-bp = Blueprint("version_1", url_prefix="/api/v2")
+bp = Blueprint("version_2", url_prefix="/api/v2")
 manager = WsManager()
 app = None
+data: DataManager | None = None
 
 
 db = TinyDB('db.json')
@@ -40,6 +41,11 @@ def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None)
 @lib.loop(10)
 async def status_check():
     status_table.insert({"time": int(time()), "count": len(wss)})
+
+@bp.after_server_start
+async def setup(app, _):
+    data = DataManager(app)
+    await data.prepare_table()
 
 
 @bp.websocket("/gateway")
@@ -80,7 +86,7 @@ async def send(request, userid):
     }
     await manager.broadcast(dumper(**payload))
     data["source"] = userid
-    content_table.insert(data)
+    await data.create_message(**data)
     return json(message="send message")
                     
 @bp.get("/messages")
