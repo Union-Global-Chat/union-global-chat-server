@@ -12,6 +12,7 @@ class DatabaseManager:
             if not name.startswith("_") and iscoroutinefunction(func):
                 @wraps(func)
                 async def new(self, *args, **kwargs):
+                    print(func)
                     if "cursor" in kwargs:
                         return await func(self, *args, **kwargs)
                     async with self.pool.acquire() as conn:
