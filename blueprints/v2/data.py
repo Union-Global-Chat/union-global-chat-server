@@ -1,5 +1,7 @@
 from utils import DatabaseManager
 
+from sanic import Sanic
+
 
 class DataManager(DatabaseManager):
     def __init__(self, app: Sanic):
