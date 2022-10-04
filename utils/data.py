@@ -17,4 +17,4 @@ class DatabaseManager:
                     async with self.pool.acquire() as conn:
                         async with conn.cursor() as cur:
                             return await func(cur, *args, **kwargs)
-                setattr(cls, name, func)
+                setattr(cls, name, new)
