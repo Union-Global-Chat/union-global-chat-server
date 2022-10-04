@@ -9,7 +9,9 @@ import asyncio
 import zlib
 import re
 from utils.wsmanager import WsManager
-from .utils import HeartBeat, DataManager
+
+from .utils import HeartBeat
+from .data import DataManager
 
 
 bp = Blueprint("version_2", url_prefix="/api/v2")
