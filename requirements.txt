@@ -4,3 +4,4 @@ orjson
 sanic-ext
 pytoml
 aiomysql
+httpx
