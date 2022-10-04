@@ -3,3 +3,4 @@ tinydb
 orjson
 sanic-ext
 pytoml
+aiomysql
