@@ -21,3 +21,4 @@ class DatabaseManager:
             async with self.pool.acquire() as conn:
                 async with conn.cursor() as cur:
                     return await func(self, cur, *args, **kwargs)
+        return new_func
