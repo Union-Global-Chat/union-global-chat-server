@@ -20,3 +20,10 @@ class DataManager(DatabaseManager):
             "INSERT INTO Message VALUES (%s, %s, %s, %s, %s);",
             (source, channel, author, guild, message)
         )
+
+    async def search_message(self, cursor, message_id):
+        await cursor.execute(
+            'SELECT * FROM Message WHERE Message -> "$.id" = %s;',
+            (message_id,)
+        )
+        return await cursor.fetchone()
