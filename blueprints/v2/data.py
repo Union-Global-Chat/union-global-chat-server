@@ -13,7 +13,7 @@ class DataManager(DatabaseManager):
                 Source BIGINT,
                 Channel JSON,
                 Author JSON,
-                Guild JSON
+                Guild JSON,
                 Message JSON
             );""")
 
