@@ -17,7 +17,7 @@ CorsExtend(app)
 for name in os.listdir("blueprints"):
     if not name.startswith("_"):
         print("Loading: {}".format(name))
-        lib = import_module("blueprints.{}".replace(".py", ""))
+        lib = import_module("blueprints.{}".format(name.replace(".py", "")))
         app.blueprint(lib.bp)
         lib.app = app
         print("Loaded: {}".format(name))
