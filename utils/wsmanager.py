@@ -1,11 +1,11 @@
-from sanic import WebSocket
+from sanic import Websocket
 
 from typing import List, Any
 
 
 class WsManager:
     def __init__(self):
-        self.protocols: List[WebSocket] = []
+        self.protocols: List[Websocket] = []
 
     def connect(self, ws: WebSocket) -> None:
         self.protocols.append(ws)
