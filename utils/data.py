@@ -18,7 +18,7 @@ class DatabaseManager:
         async def new_func(self, *args, **kwargs):
             if "cursor" in kwargs:
                 return await func(self, *args, **kwargs)
-            async with self.pool.acquire() as conn:
-                async with conn.cursor() as cur:
-                    return await func(self, cur, *args, **kwargs)
+            async with self.pool.acquire() as connection:
+                async with connection.cursor() as cursor:
+                    return await func(self, cursor, *args, **kwargs)
         return new_func
