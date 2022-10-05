@@ -25,7 +25,6 @@ data: DataManager | None = None
 
 
 db = TinyDB('db.json')
-token_table = db.table("token")
 content_table = db.table("content")
 status_table = db.table("status")
 user = Query()
