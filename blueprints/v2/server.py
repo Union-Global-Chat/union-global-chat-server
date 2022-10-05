@@ -1,5 +1,5 @@
 from sanic import Blueprint
-from lib import authorized, json
+from lib import json
 from aiofiles import open as aioopen
 import lib
 from tinydb import TinyDB, Query
@@ -10,7 +10,7 @@ import zlib
 import re
 from utils.wsmanager import WsManager
 
-from .utils import HeartBeat
+from .utils import HeartBeat, authorized
 from .data import DataManager
 
 
@@ -69,7 +69,7 @@ async def gateway(request, ws):
 
 @bp.post("/messages")
 @authorized()
-async def send(request, userid):
+async def send(request, user):
     data = request.json
     async with aioopen("bans.txt", "r") as f:
         users = await f.readlines()
@@ -80,7 +80,7 @@ async def send(request, userid):
     payload = {
         "type": "message",
         "data": {
-            "source": userid,
+            "source": user["id"],
             "data": data
         }
     }
@@ -115,18 +115,18 @@ async def getUser(self, userid, message_id):
 
 @bp.delete("/messages/<message_id>")
 @authorized()
-async def delete_content(request, userid, message_id):
+async def delete_content(request, user, message_id):
     data = content_table.search(content.message.id == message_id)
     if len(data) == 0:
         return json(status=404, message="I can't found that message.")
     else:
-        check = content_table.search(content.from_bot == userid)
+        check = content_table.search(content.from_bot == user["id"])
         if len(check) == 0:
             return json(status=403, message="Sended by another bot, so you can't delete message.")
         payload = {
             "type": "delete",
             "data": {
-                "source": userid,
+                "source": user["id"],
                 "messageid": message_id
             }
         }
