@@ -12,7 +12,7 @@ def authorized(func):
     @wraps(func)
     async def decorated_func(request, *args, **kwargs):
         try:
-            user = jwt.decode(request.token, CONFIG["secret_key"], algorithms="HS256")
+            user = jwt.decode(request.token, CONFIG["secret_key"], algorithms=["HS256"])
         except InvalidSignatureError:
             return json(message="Authorized failed", status=401)
         else:
