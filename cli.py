@@ -1,7 +1,7 @@
 from data import CONFIG
 
 import jwt
-from pymysql
+import pymysql
 
 
 def main():
