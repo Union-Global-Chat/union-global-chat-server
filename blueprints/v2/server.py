@@ -7,13 +7,14 @@ import lib
 from tinydb import TinyDB, Query
 from orjson import dumps, loads
 from sanic.log import logger
+
 from time import time
 import asyncio
 import zlib
 import re
 from utils.wsmanager import WsManager
 
-from .utils import HeartBeat, authorized
+from .utils import HeartBeat, authorized, dumper
 from .data import DataManager
 from .errors import InvalidTokenError
 from data import CONFIG
@@ -29,19 +30,9 @@ db = TinyDB('db.json')
 content_table = db.table("content")
 content = Query()
 
+heartbeat_queue = asyncio.Queue()
 
 invite_detector = re.compile("(http(s)?://)?((canary|ptb).)?discord(.gg|.com)/[0-9]")
-
-
-def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None, code: int=200):
-    payload = {
-        "type": type,
-        "data": data,
-        "code": code,
-        "success": success,
-        "message": message
-    }
-    return zlib.compress(dumps(payload))
             
 
 @bp.after_server_start
@@ -61,6 +52,7 @@ async def gateway(request, ws):
     await ws.send(dumper("hello"))
     while True:
         payload = loads(zlib.decompress(await ws.recv()))
+        await heartbeat_queue.put(payload)
         if payload["type"] == "identify":
             try:
                 user = jwt.decode(payload["data"]["token"], CONFIG["secret_key"], algorithms=["HS256"])
@@ -74,7 +66,7 @@ async def gateway(request, ws):
             else:
                 await ws.send(dumper("identify"))
                 manager.connect(ws)
-                request.app.loop.create_task(HeartBeat(ws).start())
+                request.app.loop.create_task(HeartBeat(ws, heartbeat_queue).start())
 
 
 @bp.post("/messages")

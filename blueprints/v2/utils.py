@@ -1,7 +1,7 @@
 from sanic import Websocket
 import jwt
 from jwt.exceptions import InvalidSignatureError
-from orjson import loads
+from orjson import dumps
 
 import asyncio
 from functools import wraps
@@ -9,6 +9,18 @@ from time import time
 import zlib
 
 from data import CONFIG
+
+
+
+def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None, code: int=200):
+    payload = {
+        "type": type,
+        "data": data,
+        "code": code,
+        "success": success,
+        "message": message
+    }
+    return zlib.compress(dumps(payload))
 
 
 def authorized(func):
@@ -24,9 +36,10 @@ def authorized(func):
         
 
 class HeartBeat:
-    def __init__(self, ws: Websocket):
+    def __init__(self, ws: Websocket, queue: asyncio.Queue):
         self.ws = ws
         self.open: bool = True
+        self.queue = queue
 
     async def send_heartbeat(self):
         await self.ws.send(dumper('heartbeat', {"unix_time": time()}))
@@ -34,10 +47,9 @@ class HeartBeat:
     async def start(self):
         while self.open:
             try:
-                payload = loads(zlib.decompress(await asyncio.wait_for(self.ws.recv(), timeout=30)))
+                payload = await asyncio.wait_for(self.queue.get(), timeout=30)
                 if payload["type"] == "heartbeat":
                     await self.send_heartbeat()
                     await asyncio.sleep(10)
             except asyncio.TimeoutError:
-                await manager.disconnect(ws)
                 self.open = False
