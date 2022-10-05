@@ -9,6 +9,7 @@ class ConfigSanicType(TypedDict):
 
 class ConfigType(TypedDict):
     webhook: str
+    secret_key: str
     sanic: ConfigSanicType
     mysql: dict
 
