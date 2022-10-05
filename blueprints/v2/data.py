@@ -26,7 +26,7 @@ class DataManager(DatabaseManager):
         """)
         await cursor.execute("""
             CREATE TABLE IF NOT EXISTS BanUser(
-                UserId TEXT PRIMARY KEY NOT NULL
+                UserId TEXT
             );
         """)
 
