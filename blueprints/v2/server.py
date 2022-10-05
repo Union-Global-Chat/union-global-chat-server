@@ -15,6 +15,7 @@ from utils.wsmanager import WsManager
 
 from .utils import HeartBeat, authorized
 from .data import DataManager
+from .errors import InvalidTokenError
 from data import CONFIG
 
 
@@ -57,11 +58,16 @@ async def gateway(request, ws):
     """
     await ws.send(dumper("hello"))
     while True:
-        data = loads(zlib.decompress(await ws.recv()))
+        payload = loads(zlib.decompress(await ws.recv()))
         if data["type"] == "identify":
             try:
-                data = jwt.decode(data["data"]["token"], CONFIG["secret_key"], algorithms=["HS256"])
-            except InvalidSignatureError:
+                user = jwt.decode(payload["data"]["token"], CONFIG["secret_key"], algorithms=["HS256"])
+                if await data.get_bot(user["id"]) is None:
+                    raise InvalidTokenError("Invalid token")
+            except (
+                InvalidSignatureError,
+                InvalidTokenError
+            ):
                 await ws.close(message=dumper("identify", success=False, code=4001, message="invaild token"))
             else:
                 await ws.send(dumper("identify"))
