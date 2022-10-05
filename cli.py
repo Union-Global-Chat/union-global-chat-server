@@ -13,7 +13,7 @@ def main():
                 "INSERT INTO User VALUES(%s, %s);",
                 (bot_id, bot_name)
             )
-    print(jwt.encode({"id": bot_id, "username": bot_name}, CONFIG["secret"]))
+    print(jwt.encode({"id": bot_id, "username": bot_name}, CONFIG["secret_key"]))
 
 if __name__ == "__main__":
     main()

@@ -1,6 +1,7 @@
 from typing import Optional, Tuple
 
 from utils import DatabaseManager
+from orjson import dumps
 
 from sanic import Sanic
 
@@ -33,7 +34,7 @@ class DataManager(DatabaseManager):
     async def create_message(self, cursor, source, channel, author, guild, message):
         await cursor.execute(
             "INSERT INTO Message VALUES (%s, %s, %s, %s, %s);",
-            (source, channel, author, guild, message)
+            (source, dumps(channel), dumps(author), dumps(guild), dumps(message))
         )
 
     async def search_message(self, cursor, message_id):
@@ -43,14 +44,14 @@ class DataManager(DatabaseManager):
         )
         return await cursor.fetchone()
     
-    async def get_bot(self, bot_id: int) -> Optional[Tuple[str, str]]:
+    async def get_bot(self, cursor, bot_id: int) -> Optional[Tuple[str, str]]:
         await cursor.execute(
             "SELECT * FROM User WHERE Id=%s;",
             (bot_id,)
         )
         return await cursor.fetchone()
 
-    async def exist_ban_user(self, user_id: str) -> bool:
+    async def exist_ban_user(self, cursor, user_id: str) -> bool:
         await cursor.execute(
             "SELECT * FROM BanUser WHERE UserId=%s;",
             (user_id,)

@@ -33,10 +33,11 @@ content = Query()
 invite_detector = re.compile("(http(s)?://)?((canary|ptb).)?discord(.gg|.com)/[0-9]")
 
 
-def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None):
+def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None, code: int=200):
     payload = {
         "type": type,
         "data": data,
+        "code": code,
         "success": success,
         "message": message
     }
@@ -45,6 +46,7 @@ def dumper(type: str, data: dict=None, *, success: bool=True, message: str=None)
 
 @bp.after_server_start
 async def setup(app, _):
+    global data
     data = DataManager(app)
     await data.prepare_table()
 
@@ -59,7 +61,7 @@ async def gateway(request, ws):
     await ws.send(dumper("hello"))
     while True:
         payload = loads(zlib.decompress(await ws.recv()))
-        if data["type"] == "identify":
+        if payload["type"] == "identify":
             try:
                 user = jwt.decode(payload["data"]["token"], CONFIG["secret_key"], algorithms=["HS256"])
                 if await data.get_bot(user["id"]) is None:
@@ -72,15 +74,13 @@ async def gateway(request, ws):
             else:
                 await ws.send(dumper("identify"))
                 manager.connect(ws)
-                app.loop.create_task(HeartBeat(ws).start())
+                request.app.loop.create_task(HeartBeat(ws).start())
 
 
 @bp.post("/messages")
 @authorized
 async def send(request, user):
     payload = request.json
-    async with aioopen("bans.txt", "r") as f:
-        users = await f.readlines()
     if await data.exist_ban_user(payload["author"]["id"]):
         return json(message="That user are baned", status=400, code="ban_user")
     if invite_detector.match(payload["message"]["content"]) is not None:
@@ -93,9 +93,9 @@ async def send(request, user):
         }
     }
     await manager.broadcast(dumper(**payload))
-    payload["source"] = userid
     logger.info(f"Recieve message: {payload}")
-    await data.create_message(**payload)
+    payload["data"]["data"].update({"source": user["id"]})
+    await data.create_message(**payload["data"]["data"])
     return json(message="send message")
 
 
