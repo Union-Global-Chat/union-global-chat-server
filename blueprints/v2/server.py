@@ -78,24 +78,24 @@ async def gateway(request, ws):
 @bp.post("/messages")
 @authorized
 async def send(request, user):
-    data = request.json
+    payload = request.json
     async with aioopen("bans.txt", "r") as f:
         users = await f.readlines()
-    if data["author"]["id"] in users:
+    if await data.exist_ban_user(payload["author"]["id"])
         return json(message="That user are baned", status=400, code="ban_user")
-    if invite_detector.match(data["message"]["content"]) is not None:
+    if invite_detector.match(payload["message"]["content"]) is not None:
         return json(message="Invite link detected", status=400, code="ngword_detect")
     payload = {
         "type": "message",
         "data": {
             "source": user["id"],
-            "data": data
+            "data": payload
         }
     }
     await manager.broadcast(dumper(**payload))
-    data["source"] = userid
-    logger.info(f"Recieve message: {data}")
-    await data.create_message(**data)
+    payload["source"] = userid
+    logger.info(f"Recieve message: {payload}")
+    await data.create_message(**payload)
     return json(message="send message")
 
 
