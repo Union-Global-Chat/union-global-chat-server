@@ -1,6 +1,8 @@
 from sanic import Blueprint
 from lib import json
 from aiofiles import open as aioopen
+import jwt
+from jwt.exceptions import InvalidSignatureError
 import lib
 from tinydb import TinyDB, Query
 from orjson import dumps, loads
@@ -13,6 +15,7 @@ from utils.wsmanager import WsManager
 
 from .utils import HeartBeat, authorized
 from .data import DataManager
+from data import CONFIG
 
 
 bp = Blueprint("version_2", url_prefix="/api/v2")
@@ -59,8 +62,9 @@ async def gateway(request, ws):
     while True:
         data = loads(zlib.decompress(await ws.recv()))
         if data["type"] == "identify":
-            token = token_table.search(user.token == data["data"]["token"])
-            if len(token) == 0:
+            try:
+                data = jwt.decode(data["data"]["token"], CONFIG["secret_key"], algorithms=["HS256"])
+            except InvalidSignatureError:
                 await ws.close(message=dumper("identify", success=False, code=4001, message="invaild token"))
             else:
                 await ws.send(dumper("identify"))
