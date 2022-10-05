@@ -81,7 +81,7 @@ async def send(request, user):
     payload = request.json
     async with aioopen("bans.txt", "r") as f:
         users = await f.readlines()
-    if await data.exist_ban_user(payload["author"]["id"])
+    if await data.exist_ban_user(payload["author"]["id"]):
         return json(message="That user are baned", status=400, code="ban_user")
     if invite_detector.match(payload["message"]["content"]) is not None:
         return json(message="Invite link detected", status=400, code="ngword_detect")
