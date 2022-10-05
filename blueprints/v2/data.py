@@ -17,9 +17,9 @@ class DataManager(DatabaseManager):
                 Message JSON
             );""")
         await cursor.execute("""
-            CREATE TABLE IF NOT EXISTS Token(
-                BotId BIGINT,
-                Token TEXT
+            CREATE TABLE IF NOT EXISTS User(
+                Id BIGINT,
+                UserName TEXT
             );
         """)
 
