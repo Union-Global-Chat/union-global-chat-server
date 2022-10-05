@@ -50,7 +50,7 @@ class DataManager(DatabaseManager):
         )
         return await cursor.fetchone()
 
-    async def exist_user(self, user_id: str) -> bool:
+    async def exist_ban_user(self, user_id: str) -> bool:
         await cursor.execute(
             "SELECT * FROM BanUser WHERE UserId=%s;",
             (user_id,)
