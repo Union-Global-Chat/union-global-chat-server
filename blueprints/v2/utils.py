@@ -3,7 +3,7 @@ import jwt
 from jwt.exceptions import InvalidSignatureError
 
 import asyncio
-from functools import wrap
+from functools import wraps
 
 from data import CONFIG
 from types import JwtDecodedType
