@@ -1,3 +1,5 @@
+from typing import Optional, Tuple
+
 from utils import DatabaseManager
 
 from sanic import Sanic
@@ -36,8 +38,9 @@ class DataManager(DatabaseManager):
         )
         return await cursor.fetchone()
     
-    async def create_token(self, bot_id: int, token: str):
+    async def get_bot(self, bot_id: int) -> Optional[Tuple[str, str]]:
         await cursor.execute(
-            "INSERT INTO Token VALUES (%s, %s);",
-            (bot_id, token)
+            "SELECT * FROM User WHERE Id=%s;",
+            (bot_id,)
         )
+        return await cursor.fetchone()
