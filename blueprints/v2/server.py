@@ -52,6 +52,7 @@ async def gateway(request, ws):
     await ws.send(dumper("hello"))
     while True:
         payload = loads(zlib.decompress(await ws.recv()))
+        logger.info(f"Received payload: {payload}")
         await heartbeat_queue.put(payload)
         if payload["type"] == "identify":
             try:
