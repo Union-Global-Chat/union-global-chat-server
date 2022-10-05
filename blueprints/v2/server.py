@@ -4,6 +4,7 @@ from aiofiles import open as aioopen
 import lib
 from tinydb import TinyDB, Query
 from orjson import dumps, loads
+from sanic.log import logger
 from time import time
 import asyncio
 import zlib
@@ -86,6 +87,7 @@ async def send(request, user):
     }
     await manager.broadcast(dumper(**payload))
     data["source"] = userid
+    logger.info(f"Recieve message: {data}")
     await data.create_message(**data)
     return json(message="send message")
 
