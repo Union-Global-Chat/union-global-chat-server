@@ -18,7 +18,7 @@ class DataManager(DatabaseManager):
             );""")
         await cursor.execute("""
             CREATE TABLE IF NOT EXISTS User(
-                Id BIGINT,
+                Id TEXT,
                 UserName TEXT
             );
         """)
