@@ -68,7 +68,7 @@ async def gateway(request, ws):
 
 
 @bp.post("/messages")
-@authorized()
+@authorized
 async def send(request, user):
     data = request.json
     async with aioopen("bans.txt", "r") as f:
@@ -91,13 +91,13 @@ async def send(request, user):
 
 
 @bp.get("/messages")
-@authorized()
+@authorized
 async def contents(request, userid):
     return json(content_table.all())
 
 
 @bp.get("/messages/<message_id>")
-@authorized()
+@authorized
 async def getUser(self, userid, message_id):
     result = await data.search_message(message_id)
     if result is None:
@@ -114,7 +114,7 @@ async def getUser(self, userid, message_id):
 
 
 @bp.delete("/messages/<message_id>")
-@authorized()
+@authorized
 async def delete_content(request, user, message_id):
     data = content_table.search(content.message.id == message_id)
     if len(data) == 0:
