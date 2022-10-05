@@ -24,6 +24,11 @@ class DataManager(DatabaseManager):
                 UserName TEXT
             );
         """)
+        await cursor.execute("""
+            CREATE TABLE IF NOT EXISTS BanUser(
+                UserId TEXT PRIMARY KEY NOT NULL
+            );
+        """)
 
     async def create_message(self, cursor, source, channel, author, guild, message):
         await cursor.execute(
@@ -44,3 +49,10 @@ class DataManager(DatabaseManager):
             (bot_id,)
         )
         return await cursor.fetchone()
+
+    async def exist_user(self, user_id: str) -> bool:
+        await cursor.execute(
+            "SELECT * FROM BanUser WHERE UserId=%s;",
+            (user_id,)
+        )
+        return await cursor.fetchone() is not None
