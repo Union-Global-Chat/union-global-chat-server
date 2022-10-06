@@ -18,10 +18,10 @@
 
 | name    | type                             |
 | ---     | ---                              |
-| channel | [Channel object](/types/channel) |
-| author  | [Author object](/types/author)   |
-| guild   | [Guild object](/types/guild)     |
-| message | [Message object](/types/message) |
+| channel | [Channel object](types/channel) |
+| author  | [Author object](types/author)   |
+| guild   | [Guild object](types/guild)     |
+| message | [Message object](types/message) |
 
 ## DELETE: /api/v1/channels/:messageid (Beta)
 
