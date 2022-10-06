@@ -12,6 +12,8 @@
 
 ## POST /api/v1/channels
 
+送信すると接続しているすべてのウェブソケットに送信されます。
+
 ```json
 {
     "channel": {
@@ -40,7 +42,14 @@
      }
 }
 ```
-と送信するとウェブソケットに全部送信されます。
+### JSON data
+
+| name    | type                             |
+| ---     | ---                              |
+| channel | [Channel object](/types/channel) |
+| author  | [Author object](/types/author)   |
+| guild   | [Guild object](/types/guild)     |
+| message | [Message object](/types/message) |
 
 ## DELETE: /api/v1/channels/:messageid (Beta)
 
