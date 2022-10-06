@@ -14,34 +14,6 @@
 
 送信すると接続しているすべてのウェブソケットに送信されます。
 
-```json
-{
-    "channel": {
-        "name": "text",
-        "id": "000000000"
-    },
-    "author": {
-        "username": "name",
-        "discriminator": "8888",
-        "id": "000000000",
-        "avatarURL": "URL(png, dynamic, 512)",
-        "bot": false
-    },
-    "guild": {
-        "name": "KGC",
-        "id": "000000000",
-        "iconURL": "URL(png, dynamic, 256)"
-    },
-    "message": {
-        "content": "",
-        "id": "",
-        "cleanContent": "メンション等を省いたcontent",
-        "?reference": "",
-        "?attachments": [{"name": "filename", "url": "fileurl", "?height": "height", "?width": "width", "content_type": "file’s content_type"}],
-        "embeds": []
-     }
-}
-```
 ### JSON data
 
 | name    | type                             |
