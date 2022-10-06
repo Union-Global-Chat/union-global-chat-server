@@ -36,10 +36,11 @@ def authorized(func):
         
 
 class HeartBeat:
-    def __init__(self, ws: Websocket, queue: asyncio.Queue):
+    def __init__(self, ws: Websocket, queue: asyncio.Queue, client_id: str):
         self.ws = ws
         self.open: bool = True
         self.queue = queue
+        self.client_id = client_id
 
     async def send_heartbeat(self):
         await self.ws.send(dumper('heartbeat', {"unix_time": time()}))
