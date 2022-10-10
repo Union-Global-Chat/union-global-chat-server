@@ -55,8 +55,8 @@ async def gateway(request, ws):
         logger.info(f"Received payload: {payload}")
         await heartbeat_queue.put(payload)
         if payload["type"] == "identify":
+            user = jwt.decode(payload["data"]["token"], CONFIG["secret_key"], algorithms=["HS256"])
             try:
-                user = jwt.decode(payload["data"]["token"], CONFIG["secret_key"], algorithms=["HS256"])
                 if await data.get_bot(user["id"]) is None:
                     raise InvalidTokenError("Invalid token")
             except (
@@ -67,7 +67,7 @@ async def gateway(request, ws):
             else:
                 await ws.send(dumper("identify"))
                 manager.connect(ws)
-                request.app.loop.create_task(HeartBeat(ws, heartbeat_queue).start())
+                request.app.loop.create_task(HeartBeat(ws, heartbeat_queue, user["id"]).start())
 
 
 @bp.post("/messages")
