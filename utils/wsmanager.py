@@ -16,4 +16,7 @@ class WsManager:
 
     async def broadcast(self, content: Any) -> None:
         for protocol in self.protocols:
-            await protocol.send(content)
+            try:
+                await protocol.send(content)
+            except Exception:
+                self.protocols.remove(protocol)
