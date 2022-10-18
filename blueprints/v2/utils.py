@@ -43,7 +43,10 @@ class HeartBeat:
         self.client_id = client_id
 
     async def send_heartbeat(self):
-        await self.ws.send(dumper('heartbeat', {"unix_time": time()}))
+        try:
+            await self.ws.send(dumper('heartbeat', {"unix_time": time()}))
+        except Exception:
+            self.open = False
 
     async def start(self):
         while self.open:
