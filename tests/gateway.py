@@ -10,8 +10,9 @@ async def heartbeat(ws):
         await asyncio.sleep(10)
 
 async def test(ws):
-    await ws.send(zlib.compress(b'{"type": "test"}'))
-    await asyncio.sleep(15)
+    while True:
+        await ws.send(zlib.compress(b'{"type": "test"}'))
+        await asyncio.sleep(15)
 
 async def main():
     async with connect("ws://localhost:8080/api/v2/gateway") as ws:
