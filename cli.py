@@ -17,8 +17,8 @@ def main(bot_id, bot_name):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("id", help="Bot's id")
-    parser.add_argument("name", help="Bot's name")
+    parser.add_argument("--id", help="Bot's id")
+    parser.add_argument("--name", help="Bot's name")
     args = parser.parse_args()
     if not args.id:
         bot_id = input("Bot's Id: ")
