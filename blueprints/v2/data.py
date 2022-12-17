@@ -34,7 +34,7 @@ class DataManager(DatabaseManager):
     async def create_message(self, cursor, source, channel, author, guild, message):
         await cursor.execute(
             "INSERT INTO Message VALUES (%s, %s, %s, %s, %s);",
-            (source, dumps(channel), dumps(author), dumps(guild), dumps(message))
+            (source, dumps(channel).decode(), dumps(author).decode(), dumps(guild).decode(), dumps(message).decode())
         )
 
     async def search_message(self, cursor, message_id):
