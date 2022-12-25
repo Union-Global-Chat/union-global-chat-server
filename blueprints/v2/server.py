@@ -108,10 +108,10 @@ async def getUser(self, userid, message_id):
         source, channel, author, guild, message = result
         return json({
             "source": source,
-            "channel": channel,
-            "author": author,
-            "guild": guild,
-            "message": message
+            "channel": loads(channel),
+            "author": loads(author),
+            "guild": loads(guild),
+            "message": loads(message)
         })
 
 
