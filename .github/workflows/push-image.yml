@@ -24,4 +24,4 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}
+            ghcr.io/union-global-chat/union-global-chat-server
