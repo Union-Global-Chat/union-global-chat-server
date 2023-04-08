@@ -59,4 +59,5 @@ async def git(request):
     return response.json({"hello": "world"})
 
 
-app.run(**CONFIG["sanic"])
+if __name__ == "__main__":
+    app.run(**CONFIG["sanic"])
